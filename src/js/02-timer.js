@@ -20,9 +20,14 @@ const options = {
   onClose(selectedDates) {
     const futureDate = selectedDates[0];
 
+    if (futureDate <= new Date()) {
+      alert('Please choose a date in the future');
+      return;
+    }
+
     refs.startBtn.disabled = false;
 
-    refs.startBtn.addEventListener('click', setTimer(futureDate));
+    refs.startBtn.addEventListener('click', () => setTimer(futureDate));
   },
 };
 
@@ -47,30 +52,29 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function dateRender(date) {
-  refs.days.textContent = `${date.days}`;
-  refs.hours.textContent = `${date.hours}`;
-  refs.minutes.textContent = `${date.minutes}`;
-  refs.seconds.textContent = `${date.seconds}`;
+function dateRender({ days, hours, minutes, seconds }) {
+  refs.days.textContent = `${addLeadingZero(days)}`;
+  refs.hours.textContent = `${addLeadingZero(hours)}`;
+  refs.minutes.textContent = `${addLeadingZero(minutes)}`;
+  refs.seconds.textContent = `${addLeadingZero(seconds)}`;
 }
 
 function setTimer(userDate) {
   const currentDate = new Date();
   let timeToDate = userDate - currentDate;
 
-  if (timeToDate <= 0) {
-    alert('Please choose a date in the future');
-    return;
-  }
-
   const interval = setInterval(() => {
     timeToDate -= 1000;
 
-    let convertedDate = convertMs(timeToDate);
+    const convertedDate = convertMs(timeToDate);
     dateRender(convertedDate);
 
     if (timeToDate < 1000) {
       clearInterval(interval);
     }
   }, 1000);
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
 }
