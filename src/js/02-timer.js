@@ -1,4 +1,6 @@
+import Notiflix from 'notiflix';
 import flatpickr from 'flatpickr';
+
 import 'flatpickr/dist/flatpickr.min.css';
 
 const refs = {
@@ -21,7 +23,7 @@ const options = {
     const futureDate = selectedDates[0];
 
     if (futureDate <= new Date()) {
-      alert('Please choose a date in the future');
+      Notiflix.Notify.warning('Please choose a date in the future');
       return;
     }
 
@@ -52,11 +54,11 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function dateRender({ days, hours, minutes, seconds }) {
-  refs.days.textContent = `${addLeadingZero(days)}`;
-  refs.hours.textContent = `${addLeadingZero(hours)}`;
-  refs.minutes.textContent = `${addLeadingZero(minutes)}`;
-  refs.seconds.textContent = `${addLeadingZero(seconds)}`;
+function dateRender(date) {
+  refs.days.textContent = `${addLeadingZero(date.days)}`;
+  refs.hours.textContent = `${addLeadingZero(date.hours)}`;
+  refs.minutes.textContent = `${addLeadingZero(date.minutes)}`;
+  refs.seconds.textContent = `${addLeadingZero(date.seconds)}`;
 }
 
 function setTimer(userDate) {
@@ -70,6 +72,8 @@ function setTimer(userDate) {
     dateRender(convertedDate);
 
     if (timeToDate < 1000) {
+      Notiflix.Notify.success('Time is over');
+
       clearInterval(interval);
     }
   }, 1000);
