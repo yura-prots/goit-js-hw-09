@@ -6,11 +6,26 @@ import 'flatpickr/dist/flatpickr.min.css';
 const refs = {
   datePiker: document.querySelector('#datetime-picker'),
   startBtn: document.querySelector('button[data-start]'),
+
+  timerBox: document.querySelector('.timer'),
+  fieldEl: document.querySelectorAll('.field'),
+
   days: document.querySelector('.value[data-days]'),
   hours: document.querySelector('.value[data-hours]'),
   minutes: document.querySelector('.value[data-minutes]'),
   seconds: document.querySelector('.value[data-seconds]'),
 };
+
+refs.timerBox.style = `display: flex`;
+
+refs.fieldEl.forEach(field => {
+  field.style = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+`;
+});
 
 refs.startBtn.disabled = true;
 
@@ -29,7 +44,10 @@ const options = {
 
     refs.startBtn.disabled = false;
 
-    refs.startBtn.addEventListener('click', () => setTimer(futureDate));
+    refs.startBtn.addEventListener('click', () => {
+      setTimer(futureDate);
+      refs.startBtn.disabled = true;
+    });
   },
 };
 
