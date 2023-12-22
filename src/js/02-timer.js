@@ -4,10 +4,10 @@ import 'flatpickr/dist/flatpickr.min.css';
 const refs = {
   datePiker: document.querySelector('#datetime-picker'),
   startBtn: document.querySelector('button[data-start]'),
-  daysEl: document.querySelector('.value[data-days]'),
-  hoursEl: document.querySelector('.value[data-hours]'),
-  minutesEl: document.querySelector('.value[data-minutes]'),
-  secondsEl: document.querySelector('.value[data-seconds]'),
+  days: document.querySelector('.value[data-days]'),
+  hours: document.querySelector('.value[data-hours]'),
+  minutes: document.querySelector('.value[data-minutes]'),
+  seconds: document.querySelector('.value[data-seconds]'),
 };
 
 refs.startBtn.disabled = true;
@@ -22,21 +22,7 @@ const options = {
 
     refs.startBtn.disabled = false;
 
-    refs.startBtn.addEventListener('click', () => {
-      const currentDate = new Date();
-      let timeToDate = futureDate - currentDate;
-
-      if (timeToDate <= 0) {
-        alert('Please choose a date in the future');
-        return;
-      }
-
-      setInterval(() => {
-        timeToDate -= 1000;
-        let convertedDate = convertMs(timeToDate);
-        dateRender(convertedDate);
-      }, 1000);
-    });
+    refs.startBtn.addEventListener('click', setTimer(futureDate));
   },
 };
 
@@ -62,8 +48,29 @@ function convertMs(ms) {
 }
 
 function dateRender(date) {
-  refs.daysEl.textContent = `${date.days}`;
-  refs.hoursEl.textContent = `${date.hours}`;
-  refs.minutesEl.textContent = `${date.minutes}`;
-  refs.secondsEl.textContent = `${date.seconds}`;
+  refs.days.textContent = `${date.days}`;
+  refs.hours.textContent = `${date.hours}`;
+  refs.minutes.textContent = `${date.minutes}`;
+  refs.seconds.textContent = `${date.seconds}`;
+}
+
+function setTimer(userDate) {
+  const currentDate = new Date();
+  let timeToDate = userDate - currentDate;
+
+  if (timeToDate <= 0) {
+    alert('Please choose a date in the future');
+    return;
+  }
+
+  const interval = setInterval(() => {
+    timeToDate -= 1000;
+
+    let convertedDate = convertMs(timeToDate);
+    dateRender(convertedDate);
+
+    if (timeToDate < 1000) {
+      clearInterval(interval);
+    }
+  }, 1000);
 }
