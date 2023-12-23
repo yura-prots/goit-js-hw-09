@@ -9,11 +9,14 @@ refs.form.addEventListener('submit', onSubmit);
 function onSubmit(e) {
   e.preventDefault();
 
-  const firstDelay = Number(e.target.elements.delay.value);
+  let firstDelay = Number(e.target.elements.delay.value);
   const delayStep = Number(e.target.elements.step.value);
   const amount = Number(e.target.elements.amount.value);
 
-  createPromise(2, firstDelay);
+  for (let i = 1; i <= amount; i++) {
+    createPromise(i, firstDelay);
+    firstDelay += delayStep;
+  }
 }
 
 function createPromise(position, delay) {
