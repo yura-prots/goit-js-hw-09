@@ -23,18 +23,19 @@ function createPromise(position, delay) {
 
     setInterval(() => {
       if (shouldResolve) {
-        resolve({ position, delay });
+        resolve(`Fulfilled promise ${position} in ${delay}ms`);
       } else {
-        reject({ position, delay });
+        reject(`Rejected promise ${position} in ${delay}ms`);
       }
     }, delay);
   });
 
-  promise
-    .then(({ position, delay }) => {
-      Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
-    })
-    .catch(({ position, delay }) => {
-      Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-    });
+  promise.then(onFulfilled).catch(onRejected);
+
+  function onFulfilled(result) {
+    Notiflix.Notify.success(result);
+  }
+  function onRejected(error) {
+    Notiflix.Notify.failure(error);
+  }
 }
