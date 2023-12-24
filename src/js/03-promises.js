@@ -12,13 +12,13 @@ function onSubmit(e) {
   const amount = Number(e.target.elements.amount.value);
 
   for (let i = 1; i <= amount; i++) {
-    createPromise(i, firstDelay);
+    createPromise(i, firstDelay).then(onFulfilled).catch(onRejected);
     firstDelay += delayStep;
   }
 }
 
 function createPromise(position, delay) {
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const shouldResolve = Math.random() > 0.3;
 
     setInterval(() => {
@@ -29,13 +29,12 @@ function createPromise(position, delay) {
       }
     }, delay);
   });
+}
 
-  promise.then(onFulfilled).catch(onRejected);
+function onFulfilled(result) {
+  Notiflix.Notify.success(result);
+}
 
-  function onFulfilled(result) {
-    Notiflix.Notify.success(result);
-  }
-  function onRejected(error) {
-    Notiflix.Notify.failure(error);
-  }
+function onRejected(error) {
+  Notiflix.Notify.failure(error);
 }
